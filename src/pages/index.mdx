@@ -32,7 +32,7 @@ import transformer from "../assets/transformer.webp";
     {
       name: "Héctor Laria",
       url: "https://hecoding.github.io",
-      institution: "Computer Vision Center \n Universitat Autonoma de Barcelona",
+      institution: "Computer Vision Center",
     },
     {
       name: "Alex Gomez-Villa",
@@ -90,11 +90,14 @@ import transformer from "../assets/transformer.webp";
   ]}
   />
 
-<Video source={outside} />
+<Figure
+    caption="Unintended consequences in diffusion model customization: a) Appearance drift:  Columns demonstrate  fine-grained class changes, complete object and scene shifts, and alterations in color (on both rows, images are generated from same seed). b) Semantic drift: finetuning negatively impacts the zero-shot classification capabilities of the models. "
+  >
+    <Image src={teaser} alt="alt text" />
+</Figure>
 
-## Abstract
-
-Recent 
+## TL;DR
+Methods like Dreambooth lead to substantial drift in previously learned representations during the finetuning process even when adapting to as few as five images.
 
 ## Another section, with a figure
 
