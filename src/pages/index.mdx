@@ -1,7 +1,7 @@
 ---
 layout: ../layouts/Layout.astro
 title: Assessing Open-world Forgetting in Generative Image Model Customization
-description: Simple project page template for your research paper, built with Astro and Tailwind CSS
+description: Project page for the paper
 favicon: /favicon.svg
 thumbnail: /screenshot.png
 ---
@@ -73,19 +73,14 @@ import transformer from "../assets/transformer.webp";
   ]}
   links={[
     {
-      name: "Paper",
-      url: "",
-      icon: "fa-solid:file-pdf",
-    },
-    {
-      name: "Code",
-      url: "https://github.com/RomanHauksson/academic-project-astro-template",
-      icon: "mdi:github",
-    },
-    {
       name: "arXiv",
-      url: "",
+      url: "http://arxiv.org/abs/2410.14159",
       icon: "academicons:arxiv",
+    },
+    {
+      name: "Code (soon)",
+      url: "",
+      icon: "mdi:github",
     },
   ]}
   />
@@ -93,7 +88,7 @@ import transformer from "../assets/transformer.webp";
 <Figure
     caption="Unintended consequences in diffusion model customization. a) Appearance drift:  Columns demonstrate  fine-grained class changes, complete object and scene shifts, and alterations in color (on both rows, images are generated from same seed). b) Semantic drift: finetuning negatively impacts the zero-shot classification capabilities of the models. "
   >
-    <Image src={teaser} alt="alt text" />
+    <Image src={teaser} alt="Methods like Dreambooth lead to substantial drift in previously learned representations during the finetuning process even when adapting to as few as five images." />
 </Figure>
 
 ## TLDR
@@ -109,24 +104,13 @@ Use the figure component to display images, videos, equations, or any other elem
     <Image src={transformer} alt="alt text" />
 </Figure>
 
-## Two columns
+## Abstract
 
-Use the two columns component to display two columns of content. In this example, the first column contains a figure with a YouTube video and the second column contains a figure with a custom [React](https://react.dev/) component. By default, they display side by side, but if the screen is narrow enough (for example, on mobile), they're arranged vertically.
+Recent advances in diffusion models have significantly enhanced image generation capabilities. However, customizing these models with new classes often leads to unintended consequences that compromise their reliability. We introduce the concept of open-world forgetting to emphasize the vast scope of these unintended alterations, contrasting it with the well-studied closed-world forgetting, which is measurable by evaluating performance on a limited set of classes or skills. Our research presents the first comprehensive investigation into open-world forgetting in diffusion models, focusing on semantic and appearance drift of representations. We utilize zero-shot classification to analyze semantic drift, revealing that even minor model adaptations lead to unpredictable shifts affecting areas far beyond newly introduced concepts, with dramatic drops in zero-shot classification of up to 60%. Additionally, we observe significant changes in texture and color of generated content when analyzing appearance drift. To address these issues, we propose a mitigation strategy based on functional regularization, designed to preserve original capabilities while accommodating new concepts. Our study aims to raise awareness of unintended changes due to model customization and advocates for the analysis of open-world forgetting in future research on model customization and finetuning methods. Furthermore, we provide insights for developing more robust adaptation methodologies.
 
-<TwoColumns>
-  <Figure slot="left" caption="Take a look at this YouTube video.">
-    <YouTubeVideo videoId="wjZofJX0v4M" />
-  </Figure>
-  <Figure slot="right" caption="Now look at this Gaussian Splat, rendered with a React component.">
-    <Splat client:idle />
-  </Figure>
-</TwoColumns>
+## WIP
 
-## LaTeX
-
-You can also add LaTeX formulas, rendered during the build process using [KaTeX](https://katex.org/) so they're quick to load for visitors of your project page. You can write them inline, like this: <LaTeX inline formula="a^2 + b^2 = c^2" />. Or, you can write them as a block:
-
-<LaTeX formula="\int_a^b f(x) dx" />
+Under construction...
 
 ## BibTeX citation
 
