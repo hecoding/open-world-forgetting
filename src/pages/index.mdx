@@ -23,8 +23,7 @@ import Splat from "../components/Splat.tsx"
 import CodeBlock from "../components/CodeBlock.astro";
 export const components = {pre: CodeBlock}
 
-import outside from "../assets/outside.mp4";
-import transformer from "../assets/transformer.webp";
+import teaser from "../assets/teaser.png";
 
 <Header
   title={frontmatter.title}
@@ -91,18 +90,7 @@ import transformer from "../assets/transformer.webp";
     <Image src={teaser} alt="Methods like Dreambooth lead to substantial drift in previously learned representations during the finetuning process even when adapting to as few as five images." />
 </Figure>
 
-## TLDR
-Methods like Dreambooth lead to substantial drift in previously learned representations during the finetuning process even when adapting to as few as five images.
-
-## Another section, with a figure
-
-Use the figure component to display images, videos, equations, or any other element, with an optional caption.
-
-<Figure
-    caption="Diagram of the transformer deep learning architecture."
-  >
-    <Image src={transformer} alt="alt text" />
-</Figure>
+**tldr**; Methods like Dreambooth lead to substantial drift in previously learned representations during the finetuning process even when adapting to as few as five images.
 
 ## Abstract
 
