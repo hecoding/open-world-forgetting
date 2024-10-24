@@ -206,12 +206,14 @@
       width: 100%;
       max-width: 1200px;
       margin: 0 auto;
+      font-size: 0; /* Removes any whitespace */
     }
     
     .comparison-container {
       position: relative;
       width: 100%;
       line-height: 0;
+      overflow: hidden; /* Ensures slider stays within bounds */
     }
     
     .image-wrapper {
@@ -224,6 +226,8 @@
     
     .image-wrapper img {
       width: 100%;
+      height: 100%;
+      object-fit: cover;
       display: block;
     }
     
@@ -242,6 +246,7 @@
       bottom: 0;
       width: 0;
       z-index: 10;
+      cursor: ew-resize;
     }
     
     .slider-line {
@@ -293,11 +298,22 @@
       
       let isDragging = false;
 
+      function clamp(value, min, max) {
+        return Math.min(Math.max(value, min), max);
+      }
+
       function getPosition(event) {
         const rect = container.getBoundingClientRect();
-        const x = event.clientX || event.touches[0].clientX;
-        const position = ((x - rect.left) / rect.width) * 100;
-        return Math.min(Math.max(position, 0), 100);
+        let clientX;
+        
+        if (event.touches) {
+          clientX = event.touches[0].clientX;
+        } else {
+          clientX = event.clientX;
+        }
+
+        const position = ((clientX - rect.left) / rect.width) * 100;
+        return clamp(position, 0, 100);
       }
 
       function move(event) {
@@ -311,6 +327,7 @@
       // Mouse events
       slider.addEventListener('mousedown', (e) => {
         isDragging = true;
+        slider.classList.add('dragging');
         e.preventDefault();
       });
 
@@ -320,23 +337,27 @@
 
       window.addEventListener('mouseup', () => {
         isDragging = false;
+        slider.classList.remove('dragging');
       });
 
       // Touch events
       slider.addEventListener('touchstart', (e) => {
         isDragging = true;
+        slider.classList.add('dragging');
         e.preventDefault();
       });
 
       window.addEventListener('touchmove', (e) => {
+        e.preventDefault();
         move(e);
       });
 
       window.addEventListener('touchend', () => {
         isDragging = false;
+        slider.classList.remove('dragging');
       });
 
-      // Prevent dragging from causing unwanted behavior
+      // Prevent default dragging behaviors
       container.addEventListener('dragstart', (e) => {
         e.preventDefault();
       });
