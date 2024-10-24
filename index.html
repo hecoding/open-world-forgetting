@@ -181,14 +181,15 @@
 </section>
 <!-- End paper abstract -->
   
+<!-- static/images/dogs_vanilla.png dogs_db.png -->  
 <!-- Slider 0 -->
 <div class="image-comparison-slider">
   <div class="comparison-container">
     <div class="image-wrapper before">
-      <img src="static/images/dogs_vanilla.png" alt="Before image">
+      <img src="dogs_db.png" alt="Before image">
     </div>
     <div class="image-wrapper after">
-      <img src="static/images/dogs_db.png" alt="After image">
+      <img src="static/images/dogs_vanilla.png" alt="After image">
     </div>
     <div class="slider" style="left: 50%">
       <div class="slider-line"></div>
@@ -202,17 +203,20 @@
   </div>
   <style>
     .image-comparison-slider {
-      width: 100%;
-      max-width: 1200px;
-      margin: 0 auto;
-      font-size: 0; /* Removes any whitespace */
+      width: 100vw;
+      margin-left: calc(-50vw + 50%);
+      margin-right: calc(-50vw + 50%);
+      position: relative;
+      left: 50%;
+      right: 50%;
+      font-size: 0;
     }
     
     .comparison-container {
       position: relative;
       width: 100%;
       line-height: 0;
-      overflow: hidden; /* Ensures slider stays within bounds */
+      overflow: hidden;
     }
     
     .image-wrapper {
@@ -232,6 +236,10 @@
     
     .image-wrapper.before {
       position: relative;
+    }
+    
+    .image-wrapper.before img {
+      width: 100%;
       height: auto;
     }
     
@@ -287,6 +295,18 @@
     .slider-button.dragging {
       background: #f0f0f0;
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    @media (max-width: 768px) {
+      .slider-button {
+        width: 36px;
+        height: 36px;
+      }
+      
+      .slider-button svg {
+        width: 16px;
+        height: 16px;
+      }
     }
   </style>
   <script>
@@ -362,8 +382,11 @@
       });
     });
   </script>
-</div>
-<!-- End  Slider 2 -->
+</div>  
+
+<!-- End  Slider 0 -->
+
+  
 <!-- Slider 1 -->
 <div class="image-comparison-slider">
   <div class="comparison-container">
