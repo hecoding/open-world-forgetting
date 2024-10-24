@@ -191,7 +191,7 @@
     <div class="image-wrapper after">
       <img src="static/images/orange.png" alt="After image">
     </div>
-    <div class="slider">
+    <div class="slider" style="left: 50%">
       <div class="slider-line"></div>
       <div class="slider-button">
         <svg viewBox="0 0 24 24" width="24" height="24">
@@ -230,29 +230,26 @@
     .image-wrapper.before {
       position: relative;
       height: auto;
-      z-index: 1;
     }
     
     .after {
-      z-index: 2;
       clip-path: inset(0 50% 0 0);
     }
     
     .slider {
       position: absolute;
       top: 0;
-      left: 50%;
-      height: 100%;
+      bottom: 0;
       width: 0;
-      z-index: 3;
+      z-index: 10;
     }
     
     .slider-line {
       position: absolute;
       top: 0;
       bottom: 0;
-      width: 2px;
       left: -1px;
+      width: 2px;
       background: white;
       box-shadow: 0 0 4px rgba(0,0,0,0.5);
     }
@@ -271,7 +268,6 @@
       transform: translate(-50%, -50%);
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
       cursor: ew-resize;
-      z-index: 4;
     }
     
     .slider-button:hover {
@@ -294,55 +290,59 @@
       const container = document.querySelector('.comparison-container');
       const slider = document.querySelector('.slider');
       const after = document.querySelector('.after');
-      const sliderButton = document.querySelector('.slider-button');
       
       let isDragging = false;
 
-      const updateSliderPosition = (x) => {
+      function getPosition(event) {
         const rect = container.getBoundingClientRect();
-        const percent = Math.min(Math.max((x - rect.left) / rect.width * 100, 0), 100);
-        
-        slider.style.left = `${percent}%`;
-        after.style.clipPath = `inset(0 ${100 - percent}% 0 0)`;
-      };
+        const x = event.clientX || event.touches[0].clientX;
+        const position = ((x - rect.left) / rect.width) * 100;
+        return Math.min(Math.max(position, 0), 100);
+      }
 
-      const onDragStart = (e) => {
-        isDragging = true;
-        sliderButton.classList.add('dragging');
-        
-        // Prevent any default dragging behavior
-        e.preventDefault();
-      };
-
-      const onDragEnd = () => {
-        isDragging = false;
-        sliderButton.classList.remove('dragging');
-      };
-
-      const onDragMove = (e) => {
+      function move(event) {
         if (!isDragging) return;
-        e.preventDefault();
         
-        const clientX = e.type === 'mousemove' ? e.clientX : e.touches[0].clientX;
-        updateSliderPosition(clientX);
-      };
+        const position = getPosition(event);
+        slider.style.left = `${position}%`;
+        after.style.clipPath = `inset(0 ${100 - position}% 0 0)`;
+      }
 
       // Mouse events
-      sliderButton.addEventListener('mousedown', onDragStart);
-      window.addEventListener('mouseup', onDragEnd);
-      window.addEventListener('mousemove', onDragMove);
+      slider.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        e.preventDefault();
+      });
+
+      window.addEventListener('mousemove', (e) => {
+        move(e);
+      });
+
+      window.addEventListener('mouseup', () => {
+        isDragging = false;
+      });
 
       // Touch events
-      sliderButton.addEventListener('touchstart', onDragStart);
-      window.addEventListener('touchend', onDragEnd);
-      window.addEventListener('touchmove', onDragMove);
+      slider.addEventListener('touchstart', (e) => {
+        isDragging = true;
+        e.preventDefault();
+      });
 
-      // Set initial position
-      updateSliderPosition(container.getBoundingClientRect().left + container.offsetWidth / 2);
+      window.addEventListener('touchmove', (e) => {
+        move(e);
+      });
+
+      window.addEventListener('touchend', () => {
+        isDragging = false;
+      });
+
+      // Prevent dragging from causing unwanted behavior
+      container.addEventListener('dragstart', (e) => {
+        e.preventDefault();
+      });
     });
   </script>
-</div> 
-
+</div>
 <!-- End  Slider 1 -->
 
 <!--  -->
