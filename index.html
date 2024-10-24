@@ -183,7 +183,7 @@
   
 <!--"static/images/orange.png"-->
 <!-- Slider 1 -->
-  <div class="image-comparison-slider">
+<div class="image-comparison-slider">
   <div class="comparison-container">
     <div class="image-wrapper before">
       <img src="static/images/orange.png" alt="Before image">
@@ -230,26 +230,31 @@
     .image-wrapper.before {
       position: relative;
       height: auto;
+      z-index: 1;
     }
     
     .after {
+      z-index: 2;
       clip-path: inset(0 50% 0 0);
     }
     
     .slider {
       position: absolute;
-      inset: 0;
-      pointer-events: none;
+      top: 0;
+      left: 50%;
+      height: 100%;
+      width: 0;
+      z-index: 3;
     }
     
     .slider-line {
       position: absolute;
       top: 0;
       bottom: 0;
-      left: 50%;
       width: 2px;
+      left: -1px;
       background: white;
-      transform: translateX(-50%);
+      box-shadow: 0 0 4px rgba(0,0,0,0.5);
     }
     
     .slider-button {
@@ -264,49 +269,49 @@
       align-items: center;
       justify-content: center;
       transform: translate(-50%, -50%);
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
       cursor: ew-resize;
-      pointer-events: auto;
-      opacity: 0.9;
-      transition: opacity 0.2s ease-out;
+      z-index: 4;
     }
     
     .slider-button:hover {
-      opacity: 1;
+      background: #f8f8f8;
     }
     
     .slider-button svg {
       color: #666;
+      width: 24px;
+      height: 24px;
     }
 
     .slider-button.dragging {
-      opacity: 1;
+      background: #f0f0f0;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
     }
   </style>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const container = document.querySelector('.comparison-container');
+      const slider = document.querySelector('.slider');
       const after = document.querySelector('.after');
       const sliderButton = document.querySelector('.slider-button');
-      const slider = document.querySelector('.slider');
       
       let isDragging = false;
 
-      const setSliderPosition = (clientX) => {
+      const updateSliderPosition = (x) => {
         const rect = container.getBoundingClientRect();
-        const x = Math.min(Math.max(clientX - rect.left, 0), rect.width);
-        const percent = (x / rect.width) * 100;
+        const percent = Math.min(Math.max((x - rect.left) / rect.width * 100, 0), 100);
         
-        after.style.clipPath = `inset(0 ${100 - percent}% 0 0)`;
         slider.style.left = `${percent}%`;
+        after.style.clipPath = `inset(0 ${100 - percent}% 0 0)`;
       };
 
       const onDragStart = (e) => {
         isDragging = true;
         sliderButton.classList.add('dragging');
-        // Move slider to click/touch position immediately
-        const clientX = e.type === 'mousedown' ? e.clientX : e.touches[0].clientX;
-        setSliderPosition(clientX);
+        
+        // Prevent any default dragging behavior
+        e.preventDefault();
       };
 
       const onDragEnd = () => {
@@ -317,8 +322,9 @@
       const onDragMove = (e) => {
         if (!isDragging) return;
         e.preventDefault();
+        
         const clientX = e.type === 'mousemove' ? e.clientX : e.touches[0].clientX;
-        setSliderPosition(clientX);
+        updateSliderPosition(clientX);
       };
 
       // Mouse events
@@ -331,11 +337,11 @@
       window.addEventListener('touchend', onDragEnd);
       window.addEventListener('touchmove', onDragMove);
 
-      // Initial position
-      setSliderPosition(container.getBoundingClientRect().left + container.offsetWidth / 2);
+      // Set initial position
+      updateSliderPosition(container.getBoundingClientRect().left + container.offsetWidth / 2);
     });
   </script>
-</div>
+</div> 
 
 <!-- End  Slider 1 -->
 
