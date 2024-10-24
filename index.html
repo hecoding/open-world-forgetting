@@ -183,7 +183,7 @@
   
 <!--"static/images/orange.png"-->
 <!-- Slider 1 -->
-<div class="image-comparison-slider">
+  <div class="image-comparison-slider">
   <div class="comparison-container">
     <div class="image-wrapper before">
       <img src="static/images/orange.png" alt="Before image">
@@ -211,7 +211,7 @@
     .comparison-container {
       position: relative;
       width: 100%;
-      line-height: 0; /* Removes any extra space below the image */
+      line-height: 0;
     }
     
     .image-wrapper {
@@ -224,11 +224,11 @@
     
     .image-wrapper img {
       width: 100%;
-      display: block; /* Removes any extra space below the image */
+      display: block;
     }
     
     .image-wrapper.before {
-      position: relative; /* This wrapper defines the container size */
+      position: relative;
       height: auto;
     }
     
@@ -291,22 +291,22 @@
       const slider = document.querySelector('.slider');
       
       let isDragging = false;
-      let startOffset;
 
-      const setSliderPosition = (x) => {
+      const setSliderPosition = (clientX) => {
         const rect = container.getBoundingClientRect();
-        const percent = Math.min(Math.max((x - rect.left) / rect.width * 100, 0), 100);
+        const x = Math.min(Math.max(clientX - rect.left, 0), rect.width);
+        const percent = (x / rect.width) * 100;
         
-        slider.style.left = `${percent}%`;
         after.style.clipPath = `inset(0 ${100 - percent}% 0 0)`;
+        slider.style.left = `${percent}%`;
       };
 
       const onDragStart = (e) => {
         isDragging = true;
-        const sliderRect = slider.getBoundingClientRect();
-        const clientX = e.type === 'mousedown' ? e.clientX : e.touches[0].clientX;
-        startOffset = clientX - sliderRect.left;
         sliderButton.classList.add('dragging');
+        // Move slider to click/touch position immediately
+        const clientX = e.type === 'mousedown' ? e.clientX : e.touches[0].clientX;
+        setSliderPosition(clientX);
       };
 
       const onDragEnd = () => {
@@ -316,10 +316,9 @@
 
       const onDragMove = (e) => {
         if (!isDragging) return;
-        
         e.preventDefault();
         const clientX = e.type === 'mousemove' ? e.clientX : e.touches[0].clientX;
-        setSliderPosition(clientX - startOffset);
+        setSliderPosition(clientX);
       };
 
       // Mouse events
@@ -337,7 +336,7 @@
     });
   </script>
 </div>
-  
+
 <!-- End  Slider 1 -->
 
 <!--  -->
