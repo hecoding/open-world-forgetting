@@ -181,15 +181,15 @@
 </section>
 <!-- End paper abstract -->
   
-
+<!--"static/images/orange.png"-->
 <!-- Slider 1 -->
 <div class="image-comparison-slider">
   <div class="comparison-container">
-    <div class="image-wrapper before">
+    <div class="static/images/orange.png">
       <img src="static/images/orange.png" alt="Before image">
     </div>
     <div class="image-wrapper after">
-      <img src="static/images/orange.png" alt="After image">
+      <img src="/api/placeholder/1200/400" alt="After image">
     </div>
     <div class="slider">
       <div class="slider-line"></div>
@@ -235,7 +235,6 @@
     
     .after {
       clip-path: inset(0 50% 0 0);
-      transition: clip-path 0.1s ease-out;
     }
     
     .slider {
@@ -293,53 +292,49 @@
       const slider = document.querySelector('.slider');
       
       let isDragging = false;
-      let startX;
-      let sliderLeft;
+      let startOffset;
 
-      const updateSliderPosition = (clientX) => {
+      const setSliderPosition = (x) => {
         const rect = container.getBoundingClientRect();
-        const x = Math.min(Math.max(clientX - rect.left, 0), rect.width);
-        const percent = (x / rect.width) * 100;
+        const percent = Math.min(Math.max((x - rect.left) / rect.width * 100, 0), 100);
         
-        after.style.clipPath = `inset(0 ${100 - percent}% 0 0)`;
         slider.style.left = `${percent}%`;
+        after.style.clipPath = `inset(0 ${100 - percent}% 0 0)`;
       };
-      
-      sliderButton.addEventListener('mousedown', (e) => {
+
+      const onDragStart = (e) => {
         isDragging = true;
-        startX = e.clientX - slider.offsetLeft;
+        const sliderRect = slider.getBoundingClientRect();
+        const clientX = e.type === 'mousedown' ? e.clientX : e.touches[0].clientX;
+        startOffset = clientX - sliderRect.left;
         sliderButton.classList.add('dragging');
-      });
+      };
 
-      window.addEventListener('mousemove', (e) => {
-        if (!isDragging) return;
-        e.preventDefault();
-        updateSliderPosition(e.clientX);
-      });
-
-      window.addEventListener('mouseup', () => {
+      const onDragEnd = () => {
         isDragging = false;
         sliderButton.classList.remove('dragging');
-      });
+      };
+
+      const onDragMove = (e) => {
+        if (!isDragging) return;
+        
+        e.preventDefault();
+        const clientX = e.type === 'mousemove' ? e.clientX : e.touches[0].clientX;
+        setSliderPosition(clientX - startOffset);
+      };
+
+      // Mouse events
+      sliderButton.addEventListener('mousedown', onDragStart);
+      window.addEventListener('mouseup', onDragEnd);
+      window.addEventListener('mousemove', onDragMove);
 
       // Touch events
-      sliderButton.addEventListener('touchstart', (e) => {
-        isDragging = true;
-        startX = e.touches[0].clientX - slider.offsetLeft;
-        sliderButton.classList.add('dragging');
-        e.preventDefault();
-      });
+      sliderButton.addEventListener('touchstart', onDragStart);
+      window.addEventListener('touchend', onDragEnd);
+      window.addEventListener('touchmove', onDragMove);
 
-      window.addEventListener('touchmove', (e) => {
-        if (!isDragging) return;
-        e.preventDefault();
-        updateSliderPosition(e.touches[0].clientX);
-      });
-
-      window.addEventListener('touchend', () => {
-        isDragging = false;
-        sliderButton.classList.remove('dragging');
-      });
+      // Initial position
+      setSliderPosition(container.getBoundingClientRect().left + container.offsetWidth / 2);
     });
   </script>
 </div>
