@@ -181,6 +181,140 @@
 </section>
 <!-- End paper abstract -->
 
+<!-- Slider 1 -->
+<div class="image-comparison-slider">
+  <div class="comparison-container">
+    <div class="image-wrapper before">
+      <img src="static/images/orange.png" alt="Before image">
+    </div>
+    <div class="image-wrapper after">
+      <img src="static/images/orange.png" alt="After image">
+    </div>
+    <div class="slider">
+      <div class="slider-line"></div>
+      <div class="slider-button">
+        <svg viewBox="0 0 24 24" width="24" height="24">
+          <path fill="currentColor" d="M8.59 16.59L13.17 12 8.59 7.41L10 6l6 6-6 6-1.41-1.41z"/>
+          <path fill="currentColor" d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z" transform="rotate(180 12 12)"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+  <style>
+    .image-comparison-slider {
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    .comparison-container {
+      position: relative;
+      width: 100%;
+      height: 500px;
+      overflow: hidden;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .image-wrapper {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+    
+    .image-wrapper img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .after {
+      clip-path: inset(0 50% 0 0);
+      transition: clip-path 0.1s ease-out;
+    }
+    
+    .slider {
+      position: absolute;
+      inset: 0;
+      cursor: ew-resize;
+      opacity: 0.5;
+      transition: opacity 0.2s ease-out;
+    }
+    
+    .slider:hover {
+      opacity: 1;
+    }
+    
+    .slider-line {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      width: 2px;
+      background: white;
+      transform: translateX(-50%);
+    }
+    
+    .slider-button {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 48px;
+      height: 48px;
+      background: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    .slider-button svg {
+      color: #666;
+    }
+  </style>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const container = document.querySelector('.comparison-container');
+      const after = document.querySelector('.after');
+      const slider = document.querySelector('.slider');
+      
+      let isDown = false;
+      
+      const move = (e) => {
+        if (!isDown) return;
+        
+        const rect = container.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const percent = Math.min(Math.max(x / rect.width * 100, 0), 100);
+        
+        after.style.clipPath = `inset(0 ${100 - percent}% 0 0)`;
+        slider.style.left = `${percent}%`;
+      };
+      
+      slider.addEventListener('mousedown', () => isDown = true);
+      window.addEventListener('mouseup', () => isDown = false);
+      window.addEventListener('mousemove', move);
+      
+      // Touch events
+      slider.addEventListener('touchstart', (e) => {
+        isDown = true;
+        e.preventDefault();
+      });
+      window.addEventListener('touchend', () => isDown = false);
+      window.addEventListener('touchmove', (e) => {
+        e.preventDefault();
+        move(e.touches[0]);
+      });
+    });
+  </script>
+</div>
+  
+<!-- End  Slider 1 -->
 
 <!--  -->
 <section class="hero">
