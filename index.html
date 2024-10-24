@@ -204,7 +204,7 @@
   <style>
     .image-comparison-slider {
       width: 100%;
-      max-width: 1200px;  /* Increased for wider images */
+      max-width: 1200px;
       margin: 0 auto;
       padding: 20px;
     }
@@ -213,7 +213,7 @@
       position: relative;
       width: 100%;
       height: 0;
-      padding-bottom: 33.33%;  /* This creates a 3:1 aspect ratio */
+      padding-bottom: 33.33%;
       overflow: hidden;
       border-radius: 8px;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -241,13 +241,7 @@
     .slider {
       position: absolute;
       inset: 0;
-      cursor: ew-resize;
-      opacity: 0.5;
-      transition: opacity 0.2s ease-out;
-    }
-    
-    .slider:hover {
-      opacity: 1;
+      pointer-events: none;
     }
     
     .slider-line {
@@ -273,44 +267,78 @@
       justify-content: center;
       transform: translate(-50%, -50%);
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      cursor: ew-resize;
+      pointer-events: auto;
+      opacity: 0.9;
+      transition: opacity 0.2s ease-out;
+    }
+    
+    .slider-button:hover {
+      opacity: 1;
     }
     
     .slider-button svg {
       color: #666;
+    }
+
+    .slider-button.dragging {
+      opacity: 1;
     }
   </style>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const container = document.querySelector('.comparison-container');
       const after = document.querySelector('.after');
+      const sliderButton = document.querySelector('.slider-button');
       const slider = document.querySelector('.slider');
       
-      let isDown = false;
-      
-      const move = (e) => {
-        if (!isDown) return;
-        
+      let isDragging = false;
+      let startX;
+      let sliderLeft;
+
+      const updateSliderPosition = (clientX) => {
         const rect = container.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const percent = Math.min(Math.max(x / rect.width * 100, 0), 100);
+        const x = Math.min(Math.max(clientX - rect.left, 0), rect.width);
+        const percent = (x / rect.width) * 100;
         
         after.style.clipPath = `inset(0 ${100 - percent}% 0 0)`;
         slider.style.left = `${percent}%`;
       };
       
-      slider.addEventListener('mousedown', () => isDown = true);
-      window.addEventListener('mouseup', () => isDown = false);
-      window.addEventListener('mousemove', move);
-      
+      sliderButton.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        startX = e.clientX - slider.offsetLeft;
+        sliderButton.classList.add('dragging');
+      });
+
+      window.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        e.preventDefault();
+        updateSliderPosition(e.clientX);
+      });
+
+      window.addEventListener('mouseup', () => {
+        isDragging = false;
+        sliderButton.classList.remove('dragging');
+      });
+
       // Touch events
-      slider.addEventListener('touchstart', (e) => {
-        isDown = true;
+      sliderButton.addEventListener('touchstart', (e) => {
+        isDragging = true;
+        startX = e.touches[0].clientX - slider.offsetLeft;
+        sliderButton.classList.add('dragging');
         e.preventDefault();
       });
-      window.addEventListener('touchend', () => isDown = false);
+
       window.addEventListener('touchmove', (e) => {
+        if (!isDragging) return;
         e.preventDefault();
-        move(e.touches[0]);
+        updateSliderPosition(e.touches[0].clientX);
+      });
+
+      window.addEventListener('touchend', () => {
+        isDragging = false;
+        sliderButton.classList.remove('dragging');
       });
     });
   </script>
